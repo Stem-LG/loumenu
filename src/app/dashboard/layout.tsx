@@ -1,6 +1,8 @@
 "use client";
 import { redirect } from "next/navigation";
 import { useUser } from "../(auth)/_hooks/use-user";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function DashboardLayout({
   children,
@@ -9,9 +11,20 @@ export default function DashboardLayout({
 }>) {
   const { data: user, isError, isFetching } = useUser();
 
-  if ((user && !isError) || isFetching) {
+  if (user && !isError) {
     return children;
   }
 
-  return redirect("/login");
+  if (isFetching) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <div>
+      Unauthorized please
+      <Link href="/login">
+        <Button>Login</Button>
+      </Link>
+    </div>
+  );
 }

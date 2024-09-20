@@ -18,15 +18,22 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { SquarePlus } from "lucide-react";
+import { ChevronLeft, SquarePlus } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 
-export function RestaurantListHeader() {
+export function MenuListHeader() {
   const [isCredenzaOpen, setCredenzaOpen] = useState(false);
+
+  const [switchState, setSwitchState] = useState(false);
+
+  const { restaurantId } = useParams<{ restaurantId: string }>();
 
   const supabase = createClient();
 
-  const { refetch } = useQuery({
-    queryKey: ["restaurants"],
+  const { data: restaurant, refetch } = useQuery({
+    queryKey: ["restaurant", restaurantId],
   });
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -35,10 +42,13 @@ export function RestaurantListHeader() {
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
+    const enabled = formData.get("enabled") === "on";
 
-    const { error } = await supabase.from("restaurants").insert({
+    const { error } = await supabase.from("menus").insert({
       name,
       description,
+      enabled,
+      restaurant_id: restaurantId,
     });
 
     if (error) {
@@ -49,25 +59,41 @@ export function RestaurantListHeader() {
     refetch();
     toast.success("Restaurant created successfully!");
     setCredenzaOpen(false);
+    setSwitchState(false);
   }
 
   return (
-    <div className="flex justify-between items-center">
-      <h1 className="text-2xl font-semibold md:text-4xl">My Restaurants</h1>
+    <div className="flex items-center justify-between">
+      <div className="flex flex-1 items-center">
+        <Link href="/dashboard/">
+          <Button size="icon" variant="ghost">
+            <ChevronLeft />
+          </Button>
+        </Link>
+        <h1 className="flex-1 text-2xl font-semibold md:text-4xl -md:-translate-x-5 -md:text-center">
+          {restaurant && (restaurant as any).name
+            ? (restaurant as any).name
+            : "..."}
+        </h1>
+      </div>
       <Credenza open={isCredenzaOpen} onOpenChange={setCredenzaOpen}>
         <CredenzaTrigger asChild>
-          <Button className="gap-1 pl-2">
+          <Button className="gap-1 pl-2 -md:fixed -md:bottom-5 -md:right-5">
             <SquarePlus size={20} /> New
           </Button>
         </CredenzaTrigger>
         <CredenzaContent>
           <CredenzaHeader>
-            <CredenzaTitle>Create New Restaurant</CredenzaTitle>
+            <CredenzaTitle>Create New Menu</CredenzaTitle>
             <CredenzaDescription>
-              Start by choosing a name and a description for your restaurant.
+              Start by choosing a name and a description for your Menu.
             </CredenzaDescription>
           </CredenzaHeader>
-          <form onSubmit={onSubmit} className="md:space-y-4">
+          <form
+            onSubmit={onSubmit}
+            className="md:space-y-4"
+            onReset={() => setCredenzaOpen(false)}
+          >
             <CredenzaBody className="[&>label]:ml-0.5">
               <Label htmlFor="name">
                 Name<span className="text-destructive">*</span>
@@ -77,7 +103,7 @@ export function RestaurantListHeader() {
                 name="name"
                 required
                 className="mb-1"
-                placeholder="Restaurant Name"
+                placeholder="Menu Name"
               />
               <Label htmlFor="description">Description</Label>
               <Textarea
@@ -85,6 +111,17 @@ export function RestaurantListHeader() {
                 name="description"
                 placeholder="Description (optional)"
               />
+              <Label htmlFor="enabled">Visibility</Label>
+              <div className="flex items-center gap-1">
+                <Switch
+                  id="enabled"
+                  name="enabled"
+                  checked={switchState}
+                  onCheckedChange={setSwitchState}
+                  autoFocus={true}
+                />
+                <p>{switchState ? "Public" : "Private"}</p>
+              </div>
             </CredenzaBody>
             <CredenzaFooter>
               <CredenzaClose asChild>
@@ -92,7 +129,7 @@ export function RestaurantListHeader() {
                   Cancel
                 </Button>
               </CredenzaClose>
-              <Button type="submit" autoFocus>Confirm</Button>
+              <Button type="submit">Confirm</Button>
             </CredenzaFooter>
           </form>
         </CredenzaContent>

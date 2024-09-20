@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -76,7 +77,7 @@ export function RestaurantCard({ restaurant }: any) {
 
   return (
     <div className="w-full rounded-xl bg-card shadow-lg md:w-96">
-      <Link href={`/dashboard/restaurant/${restaurant.id}`}>
+      <Link href={`/dashboard/${restaurant.id}`}>
         <Image
           src="/assets/logo.svg"
           width={320}
@@ -86,7 +87,7 @@ export function RestaurantCard({ restaurant }: any) {
         />
       </Link>
       <div className="flex items-center justify-between pr-1">
-        <Link href={`/dashboard/restaurant/${restaurant.id}`}>
+        <Link href={`/dashboard/${restaurant.id}`}>
           <div className="p-4">
             <h2 className="text-lg font-semibold md:text-2xl">
               {restaurant.name}
@@ -117,7 +118,7 @@ export function RestaurantCard({ restaurant }: any) {
         >
           <CredenzaContent>
             <CredenzaHeader>
-              <CredenzaTitle>Delete Restaurant</CredenzaTitle>
+              <CredenzaTitle>Delete {restaurant.name}</CredenzaTitle>
               <CredenzaDescription>
                 Are you sure you want to delete this restaurant?
               </CredenzaDescription>
@@ -134,12 +135,12 @@ export function RestaurantCard({ restaurant }: any) {
         <Credenza open={isCredenzaEditOpen} onOpenChange={setCredenzaEditOpen}>
           <CredenzaContent>
             <CredenzaHeader>
-              <CredenzaTitle>Edit Restaurant</CredenzaTitle>
+              <CredenzaTitle>Edit {restaurant.name}</CredenzaTitle>
               <CredenzaDescription>
                 Change the name and description of your restaurant.
               </CredenzaDescription>
             </CredenzaHeader>
-            <form onSubmit={onEditSubmit} className="md:space-y-4">
+            <form onSubmit={onEditSubmit} className="md:space-y-4" autoFocus={false}>
               <CredenzaBody className="[&>label]:ml-0.5">
                 <Label htmlFor="name">
                   Name<span className="text-destructive">*</span>
