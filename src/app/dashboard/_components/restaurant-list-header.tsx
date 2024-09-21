@@ -52,11 +52,11 @@ export function RestaurantListHeader() {
   }
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex items-center justify-between">
       <h1 className="text-2xl font-semibold md:text-4xl">My Restaurants</h1>
       <Credenza open={isCredenzaOpen} onOpenChange={setCredenzaOpen}>
         <CredenzaTrigger asChild>
-          <Button className="gap-1 pl-2">
+          <Button className="gap-1 pl-2.5 -md:fixed -md:bottom-5 -md:right-5">
             <SquarePlus size={20} /> New
           </Button>
         </CredenzaTrigger>
@@ -92,7 +92,9 @@ export function RestaurantListHeader() {
                   Cancel
                 </Button>
               </CredenzaClose>
-              <Button type="submit" autoFocus>Confirm</Button>
+              <Button type="submit" autoFocus>
+                Confirm
+              </Button>
             </CredenzaFooter>
           </form>
         </CredenzaContent>

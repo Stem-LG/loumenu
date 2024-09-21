@@ -78,7 +78,7 @@ export function MenuListHeader() {
       </div>
       <Credenza open={isCredenzaOpen} onOpenChange={setCredenzaOpen}>
         <CredenzaTrigger asChild>
-          <Button className="gap-1 pl-2 -md:fixed -md:bottom-5 -md:right-5">
+          <Button className="gap-1 pl-2.5 -md:fixed -md:bottom-5 -md:right-5">
             <SquarePlus size={20} /> New
           </Button>
         </CredenzaTrigger>
