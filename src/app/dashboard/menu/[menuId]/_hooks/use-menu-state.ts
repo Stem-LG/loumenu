@@ -11,7 +11,7 @@ export function useMenuState() {
 
   const { menuId } = useParams<{ menuId: string }>();
 
-  const { data: menu, isLoading } = useMenu(menuId);
+  const { data: menu, isLoading: menuIsLoading, refetch } = useMenu(menuId);
 
   const [menuSections, setMenuSections] = useState([]);
   const [deletedSections, setDeletedSections] = useState([]);
@@ -22,6 +22,55 @@ export function useMenuState() {
       setMenuSections(menu.menu_sections);
     }
   }, [menu]);
+
+  async function saveMenuSections() {
+    const { error: deleteError } = await supabase
+      .from("menu_sections")
+      .delete()
+      .in("id", deletedSections);
+
+    const { error } = await supabase
+      .from("menu_sections")
+      .upsert(menuSections.map(({ menu_items, ...section }) => section));
+
+    if (error || deleteError) {
+      toast.error(error.message || deleteError.message);
+    }
+
+    refetch();
+    setDeletedSections([]);
+    setChanged(false);
+
+    toast.success("Menu sections saved successfully");
+  }
+
+  async function addNewSection() {
+
+    const newSection = {
+      id: crypto.randomUUID(),
+      name: "New Section",
+      position: menuSections.length,
+      menu_id: menu.id,
+      menu_items: [],
+    };
+
+    setMenuSections([newSection, ...menuSections]);
+
+    setChanged(true);
+
+    toast.success("New section added successfully");
+  }
+
+  function changeSectionName(sectionId, name) {
+    setMenuSections(
+      menuSections.map((section) =>
+        section.id === sectionId
+          ? { ...section, name }
+          : section,
+      ),
+    );
+    setChanged(true);
+  }
 
   function moveSection({ activeIndex, overIndex }) {
     const newMenuSections = arrayMove(menuSections, activeIndex, overIndex);
@@ -34,58 +83,26 @@ export function useMenuState() {
     setChanged(true);
   }
 
-  async function saveMenuSections() {
-    console.log("deleting deleted");
-
-    const { error: deleteError } = await supabase
-      .from("menu_sections")
-      .delete()
-      .in("id", deletedSections);
-
-    console.log("upserting sections");
-
-    const { error } = await supabase
-      .from("menu_sections")
-      .upsert(menuSections.map(({ menu_items, ...section }) => section));
-
-    if (error || deleteError) {
-      toast.error(error.message || deleteError.message);
-    }
-
-    setDeletedSections([]);
-    setChanged(false);
-
-    toast.success("Menu sections saved successfully");
-  }
-
-  async function addNewSection() {
-    const { data: newSection, error } = await supabase
-      .from("menu_sections")
-      .insert({
-        menu_id: menuId,
-        name: "New section",
-        position: menuSections.length,
-      })
-      .select();
-
-    if (error) {
-      toast.error(error.message);
-    }
-
-    setMenuSections([...menuSections, newSection[0]]);
-
-    toast.success("New section added successfully");
+  function deleteSection(sectionId) {
+    setDeletedSections([
+      ...deletedSections,
+      sectionId,
+    ]);
+    setMenuSections(
+      menuSections.filter(
+        (section) => section.id !== sectionId,
+      ),
+    );
+    setChanged(true);
   }
 
   return {
     menu,
-    isLoading,
+    menuIsLoading,
     menuSections,
-    setMenuSections,
-    deletedSections,
-    setDeletedSections,
+    changeSectionName,
+    deleteSection,
     changed,
-    setChanged,
     moveSection,
     saveMenuSections,
     addNewSection,

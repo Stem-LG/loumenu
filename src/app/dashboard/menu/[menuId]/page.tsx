@@ -9,9 +9,8 @@ import {
 } from "@/components/ui/sortable";
 
 import { MenuManagamentHeader } from "./_components/menu-management-header";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useMenuState } from "./_hooks/use-menu-state";
+import { MenuSectionCard } from "./_components/menu-section-card";
 
 export default function MenuManagementPage() {
   return (
@@ -25,13 +24,11 @@ export default function MenuManagementPage() {
 function MenuListSection() {
   const {
     menu,
-    isLoading,
+    menuIsLoading,
     menuSections,
-    setMenuSections,
-    deletedSections,
-    setDeletedSections,
+    changeSectionName,
+    deleteSection,
     changed,
-    setChanged,
     moveSection,
     saveMenuSections,
     addNewSection,
@@ -41,7 +38,7 @@ function MenuListSection() {
     <div className="mt-5 w-full px-4 pb-20 md:mt-10 lg:px-20">
       <MenuManagamentHeader onSave={saveMenuSections} saveEnabled={changed} />
       <div className="mt-5 flex flex-wrap gap-4 md:gap-5 -lg:justify-evenly">
-        {isLoading && <p>Loading...</p>}
+        {menuIsLoading && <p>Loading...</p>}
         {!menu ||
           (menuSections.length === 0 && (
             <p>No menus found. Create a new one!</p>
@@ -53,7 +50,15 @@ function MenuListSection() {
                 <SquarePlus size={20} /> New
               </Button>
             </div>
-            <Sortable value={menuSections} onMove={moveSection}>
+            <Sortable
+              value={menuSections}
+              onMove={moveSection}
+              overlay={
+                <div className="size-full pl-11">
+                  <div className="size-full rounded-xl bg-primary/30" />
+                </div>
+              }
+            >
               {menuSections.map((menuSection) => (
                 <SortableItem
                   key={menuSection.id}
@@ -68,26 +73,14 @@ function MenuListSection() {
                       <Button
                         size="icon"
                         variant="ghost"
-                        onClick={() => {
-                          setDeletedSections([
-                            ...deletedSections,
-                            menuSection.id,
-                          ]);
-                          setMenuSections(
-                            menuSections.filter(
-                              (section) => section.id !== menuSection.id,
-                            ),
-                          );
-                          setChanged(true);
-                        }}
+                        onClick={() => deleteSection(menuSection.id)}
                       >
                         <Trash className="text-destructive" />
                       </Button>
                     </div>
                     <MenuSectionCard
                       menuSection={menuSection}
-                      setMenuSections={setMenuSections}
-                      menuSections={menuSections}
+                      changeSectionName={changeSectionName}
                     />
                   </div>
                 </SortableItem>
@@ -96,27 +89,6 @@ function MenuListSection() {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function MenuSectionCard({ menuSection, setMenuSections, menuSections }) {
-  return (
-    <div className="flex-1 rounded-xl border bg-card p-4 [&>label]:ml-1">
-      <Label htmlFor="name">Name</Label>
-      <Input
-        id="name"
-        value={menuSection.name}
-        onChange={(e) => {
-          setMenuSections(
-            menuSections.map((section) =>
-              section.id === menuSection.id
-                ? { ...section, name: e.target.value }
-                : section,
-            ),
-          );
-        }}
-      />
     </div>
   );
 }
