@@ -118,7 +118,6 @@ export function MenuListHeader() {
                   name="enabled"
                   checked={switchState}
                   onCheckedChange={setSwitchState}
-                  autoFocus={true}
                 />
                 <p>{switchState ? "Public" : "Private"}</p>
               </div>
@@ -129,7 +128,7 @@ export function MenuListHeader() {
                   Cancel
                 </Button>
               </CredenzaClose>
-              <Button type="submit">Confirm</Button>
+              <Button type="submit" autoFocus>Confirm</Button>
             </CredenzaFooter>
           </form>
         </CredenzaContent>

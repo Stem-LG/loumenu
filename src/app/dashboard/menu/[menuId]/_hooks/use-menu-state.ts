@@ -6,6 +6,9 @@ import { useMenu } from "./use-menu";
 import { createClient } from "@/lib/supabase/client";
 import { useParams } from "next/navigation";
 
+
+// ❤️ Copilot, it auto generated most of the crud operations below, few hours saved 🚀
+
 export function useMenuState() {
   const supabase = createClient();
 
@@ -15,6 +18,7 @@ export function useMenuState() {
 
   const [menuSections, setMenuSections] = useState([]);
   const [deletedSections, setDeletedSections] = useState([]);
+  const [deletedMenuItems, setDeletedMenuItems] = useState([]);
   const [changed, setChanged] = useState(false);
 
   useEffect(() => {
@@ -33,8 +37,23 @@ export function useMenuState() {
       .from("menu_sections")
       .upsert(menuSections.map(({ menu_items, ...section }) => section));
 
-    if (error || deleteError) {
-      toast.error(error.message || deleteError.message);
+    const { error: menuItemError } = await supabase
+      .from("menu_items")
+      .delete()
+      .in("id", deletedMenuItems);
+
+    const { error: menuItemUpsertError } = await supabase
+      .from("menu_items")
+      .upsert(
+        menuSections.reduce(
+          (acc, { menu_items }) => [...acc, ...menu_items],
+          [],
+        ),
+      );
+
+
+    if (error || deleteError || menuItemError || menuItemUpsertError) {
+      toast.error(error?.message || deleteError?.message || menuItemError?.message || menuItemUpsertError?.message);
     }
 
     refetch();
@@ -96,6 +115,97 @@ export function useMenuState() {
     setChanged(true);
   }
 
+  function addMenuItem(menuItem) {
+    setMenuSections(
+      menuSections.map((section) =>
+        section.id === menuItem.menu_section_id
+          ? {
+            ...section,
+            menu_items: [
+              ...section.menu_items,
+              {
+                id: crypto.randomUUID(),
+                ...menuItem,
+              }
+            ],
+          }
+          : section,
+      ),
+    );
+    setChanged(true);
+  }
+
+  function deleteMenuItem(menuItem) {
+
+    console.log(menuItem);
+
+    setMenuSections(
+      menuSections.map((section) =>
+        section.id === menuItem.menu_section_id
+          ? {
+            ...section,
+            menu_items: section.menu_items.filter(
+              (item) => {
+                return item.id !== menuItem.id
+              },
+            ),
+          }
+          : section,
+      ),
+    );
+
+    setDeletedMenuItems([
+      ...deletedMenuItems,
+      menuItem.id,
+    ]);
+
+    setChanged(true);
+  }
+
+  function changeMenuItem(menuItem) {
+    setMenuSections(
+      menuSections.map((section) =>
+        section.id === menuItem.menu_section_id
+          ? {
+            ...section,
+            menu_items: section.menu_items.map((item) =>
+              item.id === menuItem.id
+                ? menuItem
+                : item,
+            ),
+          }
+          : section,
+      ),
+    );
+    setChanged(true);
+  }
+
+  function moveMenuItem(sectionId, { activeIndex, overIndex }) {
+    const section = menuSections.find(
+      (section) => section.id === sectionId,
+    );
+
+    const newMenuItems = arrayMove(
+      section.menu_items,
+      activeIndex,
+      overIndex,
+    );
+
+    newMenuItems.forEach((item, index) => {
+      (item as any).position = index;
+    });
+
+    setMenuSections(
+      menuSections.map((section) =>
+        section.id === sectionId
+          ? { ...section, menu_items: newMenuItems }
+          : section,
+      ),
+    );
+
+    setChanged(true);
+  }
+
   return {
     menu,
     menuIsLoading,
@@ -106,5 +216,9 @@ export function useMenuState() {
     moveSection,
     saveMenuSections,
     addNewSection,
+    addMenuItem,
+    deleteMenuItem,
+    changeMenuItem,
+    moveMenuItem,
   };
 }

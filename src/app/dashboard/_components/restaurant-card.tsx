@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -152,6 +151,7 @@ export function RestaurantCard({ restaurant }: any) {
                   className="mb-1"
                   placeholder="Restaurant Name"
                   defaultValue={restaurant.name}
+                  onFocus={(e) => e.currentTarget.blur()}
                 />
                 <Label htmlFor="description">Description</Label>
                 <Textarea

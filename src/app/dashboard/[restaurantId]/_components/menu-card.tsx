@@ -153,6 +153,8 @@ export function MenuCard({ menu }: { menu: any }) {
               </CredenzaHeader>
               <form onSubmit={onEditSubmit} className="md:space-y-4">
                 <CredenzaBody className="[&>label]:ml-0.5">
+                  {/* Hack to not get auto focused input*/}
+                  <Switch className="fixed -translate-x-[200vh]" />
                   <Label htmlFor="name">
                     Name<span className="text-destructive">*</span>
                   </Label>

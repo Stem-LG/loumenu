@@ -32,6 +32,10 @@ function MenuListSection() {
     moveSection,
     saveMenuSections,
     addNewSection,
+    addMenuItem,
+    changeMenuItem,
+    deleteMenuItem,
+    moveMenuItem
   } = useMenuState();
 
   return (
@@ -55,7 +59,7 @@ function MenuListSection() {
               onMove={moveSection}
               overlay={
                 <div className="size-full pl-11">
-                  <div className="size-full rounded-xl bg-primary/30" />
+                  <div className="size-full rounded-xl border bg-primary/10" />
                 </div>
               }
             >
@@ -81,6 +85,10 @@ function MenuListSection() {
                     <MenuSectionCard
                       menuSection={menuSection}
                       changeSectionName={changeSectionName}
+                      addMenuItem={addMenuItem}
+                      changeMenuItem={changeMenuItem}
+                      deleteMenuItem={deleteMenuItem}
+                      moveMenuItem={moveMenuItem}
                     />
                   </div>
                 </SortableItem>
