@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "../(auth)/_hooks/use-user";
 import { createClient } from "@/lib/supabase/client";
+import { UserButton } from "../(auth)/_components/user-button";
 
 export function AppBar() {
   const supabase = createClient();
@@ -29,38 +30,14 @@ export function AppBar() {
         />
       </Link>
       <div className="grow" />
-      {isError || !user ? (
-        <Link href="/login">
-          <Button className="dark:bg-foreground" disabled={isRefetching}>
-            Login
+      {!isError && user && (
+        <Link href="/dashboard">
+          <Button disabled={isRefetching}>
+            <span className="-md:hidden">Go to&nbsp;</span> Dashboard
           </Button>
         </Link>
-      ) : (
-        <>
-          <Link href="/dashboard">
-            <Button disabled={isRefetching}>
-              <span className="-md:hidden">Go to&nbsp;</span> Dashboard
-            </Button>
-          </Link>
-          <Button
-            className="md:hidden"
-            size="icon"
-            variant="outline"
-            onClick={logout}
-            disabled={isRefetching}
-          >
-            <LogOut />
-          </Button>
-          <Button
-            className="-md:hidden"
-            variant="outline"
-            onClick={logout}
-            disabled={isRefetching}
-          >
-            Logout
-          </Button>
-        </>
       )}
+      <UserButton />
     </header>
   );
 }
