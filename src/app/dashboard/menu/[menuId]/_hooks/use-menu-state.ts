@@ -35,6 +35,7 @@ export function useMenuState() {
 
     const { error } = await supabase
       .from("menu_sections")
+      //eslint-disable-next-line
       .upsert(menuSections.map(({ menu_items, ...section }) => section));
 
     const { error: menuItemError } = await supabase

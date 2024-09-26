@@ -32,7 +32,7 @@ export default function ResetPasswordPage() {
     if (!code) return;
 
     supabase.auth
-      .exchangeCodeForSession("44c74f09-2442-4bfd-8658-01791431b5df")
+      .exchangeCodeForSession(code)
       .then((res) => {
         if (res.error) {
           throw res.error;
@@ -43,7 +43,7 @@ export default function ResetPasswordPage() {
       .catch((e) => {
         toast.error(e.message);
       });
-  }, []);
+  }, [code, supabase.auth]);
 
   const { isError, isFetching } = useUser();
 

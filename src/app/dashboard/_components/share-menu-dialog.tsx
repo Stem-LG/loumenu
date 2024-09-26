@@ -47,6 +47,7 @@ export default function ShareMenuDialog({
     if (!menu.slug) {
       setSlug(generateRandomSlug());
     }
+  // eslint-disable-next-line
   }, [menu]);
 
   const menuSlug = useMemo(() => {
@@ -89,7 +90,6 @@ export default function ShareMenuDialog({
   const qrCodeRef = useRef(null);
 
   const [copiedQr, setCopiedQr] = useState(false);
-  const [downloadedQr, setDownloadedQr] = useState(false);
 
   function downloadQRCode() {
     const svg = qrCodeRef.current;
@@ -106,10 +106,6 @@ export default function ShareMenuDialog({
       a.href = dataURL;
       a.download = "qrcode.png";
       a.click();
-      setDownloadedQr(true);
-      setTimeout(() => {
-        setDownloadedQr(false);
-      }, 2000);
     };
     img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
   }
@@ -132,6 +128,7 @@ export default function ShareMenuDialog({
           }),
         ]);
         setCopiedQr(true);
+        toast.success("QR Code copied to clipboard!");
         setTimeout(() => {
           setCopiedQr(false);
         }, 2000);

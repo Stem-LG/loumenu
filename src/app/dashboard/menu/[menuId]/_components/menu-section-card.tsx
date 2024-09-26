@@ -9,7 +9,6 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-  CredenzaTrigger,
 } from "@/components/ui/credenza";
 import {
   DropdownMenu,
@@ -26,7 +25,6 @@ import {
 } from "@/components/ui/sortable";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { createClient } from "@/lib/supabase/client";
 import { Menu, MoreHorizontal, SquarePlus } from "lucide-react";
 import { useState } from "react";
 
@@ -233,7 +231,7 @@ function SectionItem({ menuItem, deleteMenuItem, changeMenuItem }) {
           <CredenzaHeader>
             <CredenzaTitle>Edit {menuItem.name}</CredenzaTitle>
             <CredenzaDescription>
-              Change your item's name, description, and price.
+              Change your item&apos;s name, description, and price.
             </CredenzaDescription>
           </CredenzaHeader>
           <form onSubmit={onSubmit} className="md:space-y-4">

@@ -12,7 +12,6 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-  CredenzaTrigger,
 } from "@/components/ui/credenza";
 import {
   DropdownMenu,

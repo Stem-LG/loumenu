@@ -1,22 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "../(auth)/_hooks/use-user";
-import { createClient } from "@/lib/supabase/client";
 import { UserButton } from "../(auth)/_components/user-button";
 
 export function AppBar() {
-  const supabase = createClient();
 
-  const { data: user, refetch, isError, isRefetching } = useUser();
-
-  async function logout() {
-    await supabase.auth.signOut();
-    refetch();
-  }
+  const { data: user, isError, isRefetching } = useUser();
 
   return (
     <header className="sticky flex h-14 items-center gap-2 bg-background pr-2 shadow-sm">

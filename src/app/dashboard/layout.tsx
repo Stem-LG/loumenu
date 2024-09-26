@@ -1,5 +1,4 @@
 "use client";
-import { redirect } from "next/navigation";
 import { useUser } from "../(auth)/_hooks/use-user";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

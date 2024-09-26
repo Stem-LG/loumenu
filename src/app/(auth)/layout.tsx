@@ -4,6 +4,7 @@ import Link from "next/link";
 import bgImage from "../_assets/custom-bg.svg";
 import { useUser } from "./_hooks/use-user";
 import { redirect, usePathname } from "next/navigation";
+import { Suspense } from "react";
 
 export default function AuthLayout({
   children,
@@ -20,7 +21,7 @@ export default function AuthLayout({
 
   return (
     <div className="relative flex min-h-svh w-full items-center justify-center overflow-hidden">
-      {children}
+      <Suspense>{children}</Suspense>
       <Link href="/">
         <Image
           src="/assets/logo.svg"

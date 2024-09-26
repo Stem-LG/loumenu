@@ -176,7 +176,3 @@ export function RestaurantCard({ restaurant }: any) {
     </div>
   );
 }
-
-function EditCredenza() {
-  return <div></div>;
-}
