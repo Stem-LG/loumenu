@@ -4,12 +4,16 @@ import { useParams } from "next/navigation";
 import { useMenu } from "../_hooks/use-menu";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronLeft, Save } from "lucide-react";
+import { Check, ChevronLeft, Save, Share } from "lucide-react";
+import ShareMenuDialog from "@/app/dashboard/_components/share-menu-dialog";
+import { useState } from "react";
 
 export function MenuManagamentHeader({ onSave, saveEnabled }) {
   const { menuId } = useParams<{ menuId: string }>();
 
   const { data: menu } = useMenu(menuId);
+
+  const [isShareMenuDialogOpen, setIsShareMenuDialogOpen] = useState(false);
 
   return (
     <div className="flex items-center justify-between">
@@ -32,21 +36,35 @@ export function MenuManagamentHeader({ onSave, saveEnabled }) {
           <p className="text-2xl md:text-4xl">...</p>
         )}
       </div>
-      <Button
-        className="gap-1 pl-2.5 -md:fixed -md:bottom-5 -md:right-5"
-        onClick={onSave}
-        disabled={!saveEnabled}
-      >
-        {saveEnabled ? (
-          <>
-            <Save size={20} /> <p>Save</p>
-          </>
-        ) : (
-          <>
-            <Check size={20} /> <p>Saved</p>
-          </>
-        )}
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          className="gap-1 pl-2.5"
+          onClick={() => setIsShareMenuDialogOpen(true)}
+        >
+          <Share size-20 />
+          Share
+        </Button>
+        <Button
+          className="gap-1 pl-2.5 -md:fixed -md:bottom-5 -md:right-5"
+          onClick={onSave}
+          disabled={!saveEnabled}
+        >
+          {saveEnabled ? (
+            <>
+              <Save size={20} /> <p>Save</p>
+            </>
+          ) : (
+            <>
+              <Check size={20} /> <p>Saved</p>
+            </>
+          )}
+        </Button>
+      </div>
+      <ShareMenuDialog
+        isOpen={isShareMenuDialogOpen}
+        onClose={() => setIsShareMenuDialogOpen(false)}
+        menuId={menuId}
+      />
     </div>
   );
 }

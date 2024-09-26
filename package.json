@@ -16,6 +16,7 @@
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.1",
+    "@radix-ui/react-scroll-area": "^1.1.0",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
@@ -31,10 +32,11 @@
     "lucide-react": "^0.441.0",
     "next": "latest",
     "next-themes": "^0.3.0",
-    "prettier": "^3.3.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-qr-code": "^2.0.15",
     "sonner": "^1.5.0",
+    "supabase": "^1.200.3",
     "vaul": "^0.9.4"
   },
   "devDependencies": {

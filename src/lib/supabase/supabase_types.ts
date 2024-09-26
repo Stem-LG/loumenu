@@ -7,6 +7,31 @@ export type Json =
   | Json[]
 
 export type Database = {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string
+          query?: string
+          variables?: Json
+          extensions?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       menu_items: {
@@ -83,6 +108,7 @@ export type Database = {
           id: string
           name: string
           restaurant_id: string
+          slug: string | null
         }
         Insert: {
           description?: string | null
@@ -90,6 +116,7 @@ export type Database = {
           id?: string
           name: string
           restaurant_id: string
+          slug?: string | null
         }
         Update: {
           description?: string | null
@@ -97,6 +124,7 @@ export type Database = {
           id?: string
           name?: string
           restaurant_id?: string
+          slug?: string | null
         }
         Relationships: [
           {
@@ -177,6 +205,7 @@ export type Database = {
           id: string
           name: string
           restaurant_id: string
+          slug: string | null
         }[]
       }
       get_restaurants_by_owner: {

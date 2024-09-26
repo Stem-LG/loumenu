@@ -28,6 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "next/navigation";
+import ShareMenuDialog from "../../_components/share-menu-dialog";
 
 export function MenuCard({ menu }: { menu: any }) {
   const supabase = createClient();
@@ -36,6 +37,7 @@ export function MenuCard({ menu }: { menu: any }) {
 
   const [isCredenzaDeleteOpen, setCredenzaDeleteOpen] = useState(false);
   const [isCredenzaEditOpen, setCredenzaEditOpen] = useState(false);
+  const [isShareMenuDialogOpen, setIsShareMenuDialogOpen] = useState(false);
 
   const { refetch, isFetching } = useQuery({
     queryKey: ["restaurant", restaurantId],
@@ -113,6 +115,9 @@ export function MenuCard({ menu }: { menu: any }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
+              <DropdownMenuItem onClick={() => setIsShareMenuDialogOpen(true)}>
+                Share
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setCredenzaEditOpen(true)}>
                 Edit
               </DropdownMenuItem>
@@ -121,6 +126,11 @@ export function MenuCard({ menu }: { menu: any }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <ShareMenuDialog
+            isOpen={isShareMenuDialogOpen}
+            onClose={() => setIsShareMenuDialogOpen(false)}
+            menuId={menu.id}
+          />
           <Credenza
             open={isCredenzaDeleteOpen}
             onOpenChange={setCredenzaDeleteOpen}
